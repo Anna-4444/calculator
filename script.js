@@ -1,27 +1,8 @@
-const zero = document.querySelector("#zero");
-const one = document.querySelector("#one");
-const two = document.querySelector("#two");
-const three = document.querySelector("#three");
-const four = document.querySelector("#four");
-const five = document.querySelector("#five");
-const six = document.querySelector("#six");
-const seven = document.querySelector("#seven");
-const eight = document.querySelector("#eight");
-const nine = document.querySelector("#nine");
-
-const divide = document.querySelector("#divide");
-const multiply = document.querySelector("#multiply");
-const subtract = document.querySelector("#subtract");
-const add = document.querySelector("#add");
+const numberButtons = document.querySelectorAll("button.number");
+const operatorButtons = document.querySelectorAll("button.operator");
 const equal = document.querySelector("#equal");
-
-const clear = document.querySelector(".clear");
-const posNeg = document.querySelector(".positive-negative");
-const percent = document.querySelector(".percent");
+const display = document.querySelector(".display");
 const decimal = document.querySelector(".decimal");
-const bkspc = document.querySelector(".backspace");
-
-const display = document.querySelector(".display")
 
 let number1 = '';
 let operator = '';
@@ -29,177 +10,80 @@ let number2 = '';
 let expressionArray = [];
 let result = '';
 
-zero.addEventListener("click", function(){
-    //if zero is first number, dont need
-    if (display.innerText.length < 12) {
-    display.innerText += 0;
-    clearHighlight();
-    }
-});
-
-one.addEventListener("click", function(){
-    if (display.innerText.length < 12) {
-    display.innerText += 1;
-    clearHighlight();
-    }
-});
-
-two.addEventListener("click", function(){
-    if (display.innerText.length < 12) {
-    display.innerText += 2;
-    clearHighlight();
-    }
-});
-
-three.addEventListener("click", function(){
-    if (display.innerText.length < 12) {
-    display.innerText += 3;
-    clearHighlight();
-    } 
-});
-
-four.addEventListener("click", function(){
-    if (display.innerText.length < 12) {
-    display.innerText += 4;
-    clearHighlight();
-    }
-});
-
-five.addEventListener("click", function(){
-    if (display.innerText.length < 12) {
-    display.innerText += 5;
-    clearHighlight();
-    }
-});
-
-six.addEventListener("click", function(){
-    if (display.innerText.length < 12) {
-    display.innerText += 6;
-    clearHighlight();
-    }
-});
-
-seven.addEventListener("click", function(){
-    if (display.innerText.length < 12) {
-    display.innerText += 7;
-    clearHighlight();
-    }
-});
-
-eight.addEventListener("click", function(){
-    if (display.innerText.length < 12) {
-    display.innerText += 8;
-    clearHighlight();
-    }
-});
-
-nine.addEventListener("click", function(){
-    if (display.innerText.length < 12) {
-    display.innerText += 9;
-    clearHighlight();
-    }
-});
-
-decimal.addEventListener("click", function() {
-    let numb = display.innerText;
-    if (!numb.includes(".")){
-        display.innerText += ".";
-        clearHighlight();
-        decimal.disabled = true;
-    }    
-});
-
-posNeg.addEventListener("click", function() {
-    let numb = display.innerText;
-    let symb = "-";
-    if (numb.charAt(0) === symb) {
-        let posNumb = numb.slice(1);
-        display.innerText = posNumb;
-    } else {
-        let negNumb = symb.concat(numb);
-        display.innerText = negNumb;
-    }
-});
-
-percent.addEventListener("click", function(){
-    let numb = display.innerText;
-    let percentage = numb / 100;
-    display.innerText = percentage;
-});
-
-bkspc.addEventListener("click", function(){
-    let numb = display.innerText;
-    let bkspcNumb = numb.slice(0, numb.length - 1)
-    display.innerText = bkspcNumb;
+numberButtons.forEach(button => {
+    button.addEventListener("click", (e) => {
+        if (display.innerText.length < 12) {
+            display.innerText += e.target.value;
+        }
+    })
 })
 
-function clearHighlight() {
-    if (add.classList.contains("highlight")) {
-        add.classList.remove("highlight")
-    } else if (divide.classList.contains("highlight")) {
-        divide.classList.remove("highlight")
-    } else if (multiply.classList.contains("highlight")) {
-        multiply.classList.remove("highlight")
-    } else if (subtract.classList.contains("highlight")) {
-        subtract.classList.remove("highlight")
-    } else if (equal.classList.contains("highlight")) {
-        equal.classList.remove("highlight")
-    }
-};
-
-add.addEventListener("click", function(){
-    add.classList.add('highlight');
-    const value = display.innerText;
-    const sign = "+";
-    display.innerText = '';
-    decimal.disabled = false;
-    createExpressionArray(value, sign);
-});
-
-subtract.addEventListener("click", function(){
-    subtract.classList.add('highlight');
-    const value = display.innerText;
-    const sign = "-";
-    display.innerText = '';
-    decimal.disabled = false;
-    createExpressionArray(value, sign);
-});
-
-divide.addEventListener("click", function(){
-    divide.classList.add('highlight');
-    const value = display.innerText;
-    const sign = "/";
-    display.innerText = '';
-    decimal.disabled = false;
-    createExpressionArray(value, sign);
-});
-
-multiply.addEventListener("click", function(){
-    multiply.classList.add('highlight');
-    const value = display.innerText;
-    const sign = "*";
-    display.innerText = '';
-    decimal.disabled = false;
-    createExpressionArray(value, sign);
-});
+operatorButtons.forEach(button => {
+    button.addEventListener("click", ((e) => {
+        button.classList.add("highlight");
+        decimal.disabled = false;
+        createExpressionArray(display.innerText, e.target.value);
+        display.innerText = "";
+        equal.classList.remove("highlight");
+    }))
+})
 
 equal.addEventListener("click", function() {
     if (expressionArray.length === 2) {
         equal.classList.add('highlight');
-        const value = display.innerText;
-        const sign = "=";
-        display.innerText = '';
         decimal.disabled = false;
-        createExpressionArray(value, sign);
+        value = display.innerText;
+        display.innerText = '';
+        createExpressionArray(value, "=");
+        clearOperatorHighlight();
     };
 });
 
-clear.addEventListener("click", function() {
+// decimal button
+decimal.addEventListener("click", function() {
+    if (!display.innerText.includes(".")){
+        display.innerText += ".";
+        decimal.disabled = true;
+        equal.classList.remove("highlight");
+    }    
+});
+
+// positive-negative button
+document.querySelector(".pos-neg").addEventListener("click", function() {
+    if (display.innerText.charAt(0) === "-") {
+        display.innerText = display.innerText.slice(1);
+    } else {
+        display.innerText = "-" + display.innerText;
+    }
+    equal.classList.remove("highlight");
+});
+
+// percent button
+document.querySelector(".percent").addEventListener("click", function(){
+    display.innerText = display.innerText / 100;
+    equal.classList.remove("highlight");
+});
+
+// backspace button
+document.querySelector(".backspace").addEventListener("click", function(){
+    display.innerText = display.innerText.slice(0, display.innerText.length - 1);
+    equal.classList.remove("highlight");
+})
+
+// clear button
+document.querySelector(".clear").addEventListener("click", function() {
     display.innerText = '';
     decimal.disabled = false;
+    clearOperatorHighlight();
+    equal.classList.remove("highlight")
     reset();
-    clearHighlight();
 });
+
+function clearOperatorHighlight() {
+        operatorButtons.forEach(button => {
+            button.classList.remove("highlight")
+        })
+};
 
 function createExpressionArray(value, sign){
     if (number1 === '') {
