@@ -1,14 +1,13 @@
 const numberButtons = document.querySelectorAll("button.number");
 const operatorButtons = document.querySelectorAll("button.operator");
 const equal = document.querySelector("#equal");
-const display = document.querySelector(".display");
 const decimal = document.querySelector(".decimal");
+const display = document.querySelector(".display");
 
 let number1 = '';
 let operator = '';
 let number2 = '';
 let expressionArray = [];
-let result = '';
 
 numberButtons.forEach(button => {
     button.addEventListener("click", (e) => {
@@ -92,69 +91,39 @@ function createExpressionArray(value, sign){
     } else {
         number2 = value;
         expressionArray.push(number2)
-        console.log(expressionArray);
     };
     if (operator === '' && sign === "+" || sign === "-" || sign === "*" || sign === "/") {
         operator = sign;
         expressionArray.push(operator);
-        console.log(expressionArray);
     } else {
-        getExpression(expressionArray);
+        calculate(expressionArray);
     };
 };
 
-function getExpression(array){
-    number1 = parseFloat(array[0]);
-    operator = array[1];
-    number2 = parseFloat(array[2]);
-    console.log(number1, operator, number2);
-    operate(number1, operator, number2);
-};
-
-function operate(num1, op, num2) {
-    if (op === "+") {
-        addition(num1, num2)
+function calculate(array) {
+    if (array[1] === "+") {
+        display.innerText = Number(array[0]) + Number(array[2]);
         reset()
-    } else if (op === "-") {
-        subtraction(num1, num2)
+    } else if (array[1] === "-") {
+        display.innerText = Number(array[0]) - Number(array[2]);
         reset()
-    } else if (op === "*") {
-        multiplication(num1, num2)
+    } else if (array[1] === "*") {
+        display.innerText = Number(array[0]) * Number(array[2]);
         reset()
-    } else if (op === "/") {
-        division(num1, num2)
-        reset()
+    } else if (array[1] === "/") {
+        if (Number(array[2]) === 0) {
+            display.innerText = "Do you want to have an existential crisis?";
+            reset()
+        } else {
+            display.innerText = Number(array[0]) / Number(array[2]);
+            reset()
+        }    
     }
-};
- 
+}
+
 function reset () {
     number1 = '';
     operator = '';
     number2 = '';
     expressionArray = [];
 };
-
-function addition(number1, number2) {
-    result = number1 + number2;
-    display.innerText = result;
-};
-
-function subtraction(number1, number2) {
-    result = number1- number2;
-    display.innerText = result;
-};
-
-function multiplication(number1, number2) {
-    result = number1 * number2;
-    display.innerText = result;
-};
-
-function division(number1, number2) {
-    if (number2 === 0) {
-        display.innerText = "Do you want to have an existential crisis?";
-    } else {
-        result = number1 / number2;
-        display.innerText = result;
-    };
-};
-
