@@ -1,12 +1,11 @@
 const numberButtons = document.querySelectorAll("button.number");
 const operatorButtons = document.querySelectorAll("button.operator");
 const equal = document.querySelector("#equal");
-const decimal = document.querySelector(".decimal");
 const display = document.querySelector(".display");
 
-let number1 = '';
-let operator = '';
-let number2 = '';
+let number1 = "";
+let operator = "";
+let number2 = "";
 let expressionArray = [];
 
 numberButtons.forEach(button => {
@@ -19,30 +18,29 @@ numberButtons.forEach(button => {
 
 operatorButtons.forEach(button => {
     button.addEventListener("click", ((e) => {
-        button.classList.add("highlight");
-        decimal.disabled = false;
-        createExpressionArray(display.innerText, e.target.value);
-        display.innerText = "";
-        equal.classList.remove("highlight");
+        if (display.innerText !== "") {
+            button.classList.add("highlight");
+            createExpressionArray(display.innerText, e.target.value);
+            display.innerText = "";
+            equal.classList.remove("highlight");
+        }
     }))
 })
 
 equal.addEventListener("click", function() {
     if (expressionArray.length === 2) {
-        equal.classList.add('highlight');
-        decimal.disabled = false;
+        equal.classList.add("highlight");
         value = display.innerText;
-        display.innerText = '';
+        display.innerText = "";
         createExpressionArray(value, "=");
         clearOperatorHighlight();
     };
 });
 
 // decimal button
-decimal.addEventListener("click", function() {
+document.querySelector(".decimal").addEventListener("click", function() {
     if (!display.innerText.includes(".")){
         display.innerText += ".";
-        decimal.disabled = true;
         equal.classList.remove("highlight");
     }    
 });
@@ -71,8 +69,7 @@ document.querySelector(".backspace").addEventListener("click", function(){
 
 // clear button
 document.querySelector(".clear").addEventListener("click", function() {
-    display.innerText = '';
-    decimal.disabled = false;
+    display.innerText = "";
     clearOperatorHighlight();
     equal.classList.remove("highlight")
     reset();
@@ -85,14 +82,14 @@ function clearOperatorHighlight() {
 };
 
 function createExpressionArray(value, sign){
-    if (number1 === '') {
+    if (number1 === "") {
         number1 = value;
         expressionArray.push(number1);
     } else {
         number2 = value;
         expressionArray.push(number2)
     };
-    if (operator === '' && sign === "+" || sign === "-" || sign === "*" || sign === "/") {
+    if (operator === "" && sign === "+" || sign === "-" || sign === "*" || sign === "/") {
         operator = sign;
         expressionArray.push(operator);
     } else {
@@ -122,8 +119,8 @@ function calculate(array) {
 }
 
 function reset () {
-    number1 = '';
-    operator = '';
-    number2 = '';
+    number1 = "";
+    operator = "";
+    number2 = "";
     expressionArray = [];
 };
