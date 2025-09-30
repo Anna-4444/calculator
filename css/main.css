@@ -37,6 +37,11 @@ button {
     font-size: 1.5rem;
 }
 
+.backspace {
+    font-size: 1.25rem;
+    padding: 1rem;
+}
+
 .number {
     background-color: #9ad1d4;
 }
