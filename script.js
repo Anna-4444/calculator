@@ -182,7 +182,7 @@ function multiplication (number1, number2) {
 }
 function division (number1, number2) {
     if (number2 === 0) {
-        return "ERROR";
+        return "Do you want to have an existential crisis?";
     } else {
         return number1 / number2;
     }
